@@ -1,0 +1,332 @@
+Хорошо, я помогу вам решить эти контрольные задания по **математическому анализу, дифференциальным уравнениям и операционному исчислению** с использованием **Maple**.
+
+Для каждого задания я приведу код и пояснения.
+
+---
+
+## **Задание 1**
+Найти все частные производные 2-го порядка функции:
+\[
+f(x, y) = \arctg \frac{x + y}{1 - xy}
+\]
+
+### Решение в Maple:
+```maple
+restart;
+f1 := arctan((x + y)/(1 - x*y));
+diff(f1, x, x);
+diff(f1, x, y);
+diff(f1, y, y);
+```
+
+---
+
+## **Задание 2**
+Найти условный экстремум функции:
+\[
+f(x, y, z) = y^2 + 4z^2 - 4yz - 2xz - 2xy
+\]
+при \(2x^2 + 3y^2 + 6z^2 = 1\).
+
+### Решение в Maple:
+```maple
+restart;
+with(Optimization):
+f2 := y^2 + 4*z^2 - 4*y*z - 2*x*z - 2*x*y;
+constr2 := 2*x^2 + 3*y^2 + 6*z^2 = 1;
+Minimize(f2, {constr2}, assume = nonnegative);
+Maximize(f2, {constr2}, assume = nonnegative);
+```
+
+---
+
+## **Задание 3**
+Найти значения переменных, при которых линейная функция:
+\[
+f(x, y, z) = x + y + z
+\]
+имеет максимум, при \(x + y \leq 2\), \(z \leq 1\).
+
+### Решение в Maple:
+```maple
+restart;
+with(Optimization):
+f3 := x + y + z;
+constr3 := {x + y <= 2, z <= 1};
+Maximize(f3, constr3);
+```
+
+---
+
+## **Задание 4**
+Вычислить тройной интеграл:
+\[
+\int_0^1 dx \int_0^{e-x} dy \int_e^{e+x+y} \frac{\ln(z - x - y)}{(x - e)(x + y - e)} dz
+\]
+
+### Решение в Maple:
+```maple
+restart;
+f4 := ln(z - x - y) / ((x - exp(1)) * (x + y - exp(1)));
+int4 := int(f4, z = exp(1) .. exp(1) + x + y);
+int4 := simplify(int4);
+int4 := int(int4, y = 0 .. exp(1) - x);
+int4 := int(int4, x = 0 .. 1);
+evalf(int4);
+```
+
+---
+
+## **Задание 5**
+Дана функция \( f = xy - z^2 \). Найти \(\operatorname{grad} f\) и производную от \(f\) в направлении биссектрисы 1-го координатного угла.
+
+### Решение в Maple:
+```maple
+restart;
+with(VectorCalculus):
+f5 := x*y - z^2;
+grad_f5 := Gradient(f5, [x, y, z]);
+
+# Направление биссектрисы 1-го координатного угла
+# Это вектор (1,1,0) нормированный
+dir := <1, 1, 0> / sqrt(2);
+directional_derivative := DotProduct(grad_f5, dir);
+simplify(directional_derivative);
+```
+
+---
+
+## **Задание 6**
+Жидкость вращается вокруг оси \(Oz\) с угловой скоростью \(\Omega = [0, 0, \omega]\). Найти \(\operatorname{div} V\), \(\operatorname{rot} V\), \(\operatorname{div} w\), где \(V = [\Omega, r]\), \(w = [\Omega, V]\), \(r = [x, y, z]\).
+
+### Решение в Maple:
+```maple
+restart;
+with(VectorCalculus):
+Omega := <0, 0, omega>;
+r := <x, y, z>;
+
+V := CrossProduct(Omega, r);
+w := CrossProduct(Omega, V);
+
+div_V := Divergence(V);
+rot_V := Curl(V);
+div_w := Divergence(w);
+
+simplify(div_V);
+simplify(rot_V);
+simplify(div_w);
+```
+
+---
+
+## **Задание 7**
+При какой зависимости частоты \(\omega\) от параметров \(a, b, c\) функция \(u = \cos(ax + by - \omega t)\) удовлетворяет волновому уравнению \(\Delta u = \frac{1}{c^2} \frac{\partial^2 u}{\partial t^2}\)?
+
+### Решение в Maple:
+```maple
+restart;
+u := cos(a*x + b*y - omega*t);
+laplacian_u := diff(u, x, x) + diff(u, y, y) + diff(u, z, z);
+d2u_dt2 := diff(u, t, t);
+
+wave_eq := laplacian_u = (1/c^2) * d2u_dt2;
+simplify(wave_eq);
+# Отсюда видно: -a^2 - b^2 = -omega^2 / c^2
+# Значит omega^2 = c^2 (a^2 + b^2)
+```
+
+---
+
+## **Задание 8**
+Показать, что \(\frac{1}{r}\) удовлетворяет уравнению Лапласа в сферических координатах, а \(\ln \frac{1}{\rho}\) – в цилиндрических.
+
+### Решение в Maple:
+```maple
+restart;
+# Сферические координаты
+with(VectorCalculus):
+SetCoordinates(spherical[r, theta, phi]):
+f8_sph := 1/r;
+laplacian_sph := Laplacian(f8_sph);
+simplify(laplacian_sph);  # Должно быть 0
+
+# Цилиндрические координаты
+SetCoordinates(cylindrical[rho, phi, z]):
+f8_cyl := ln(1/rho);
+laplacian_cyl := Laplacian(f8_cyl);
+simplify(laplacian_cyl);  # Должно быть 0
+```
+
+---
+
+## **Задание 9**
+Найти матрицу Якоби и её определитель для вектор-функции:
+\[
+F = (r \cos \varphi \sin \theta,\ r \sin \varphi \sin \theta,\ r \cos \theta)
+\]
+
+### Решение в Maple:
+```maple
+restart;
+with(VectorCalculus):
+F9 := <r * cos(phi) * sin(theta), r * sin(phi) * sin(theta), r * cos(theta)>;
+Jacobian(F9, [r, phi, theta]);
+simplify(Determinant(%));
+```
+
+---
+
+## **Задание 10**
+Найти сумму ряда \(\sum_{n=1}^\infty \frac{1}{n(n+1)(n+2)}\) и сумму первых \(N\) членов.
+
+### Решение в Maple:
+```maple
+restart;
+a_n := 1/(n*(n+1)*(n+2));
+S_inf := sum(a_n, n=1..infinity);
+S_N := sum(a_n, n=1..N);
+simplify(S_N);
+```
+
+---
+
+## **Задание 11**
+Найти функцию, к которой сходится степенной ряд \(\sum_{n=1}^\infty n(n+1)x^n\).
+
+### Решение в Maple:
+```maple
+restart;
+S11 := sum(n*(n+1)*x^n, n=1..infinity);
+simplify(S11);
+```
+
+---
+
+## **Задание 12**
+Разложить в степенной ряд \(f(x) = \arcsin x\) в окрестности \(x=0\) до 9-го порядка.
+
+### Решение в Maple:
+```maple
+restart;
+f12 := arcsin(x);
+series(f12, x=0, 10);
+```
+
+---
+
+## **Задание 13**
+Разложить в ряд Тейлора функцию \(f(x, y) = \arctg \frac{x-y}{1+xy}\) до 6-го порядка в окрестности \((0,0)\).
+
+### Решение в Maple:
+```maple
+restart;
+f13 := arctan((x - y)/(1 + x*y));
+mtaylor(f13, [x, y], 7);
+```
+
+---
+
+## **Задание 14**
+Разложить в ряд Фурье функцию:
+\[
+f(x) = 
+\begin{cases} 
+6, & 0 < x < 2 \\ 
+3x, & 2 \leq x < 4 
+\end{cases}
+\]
+с периодом 4, удерживая 6 членов. Построить график функции и частичной суммы.
+
+### Решение в Maple:
+```maple
+restart;
+with(plots):
+f14 := piecewise(0 < x and x < 2, 6, 2 <= x and x < 4, 3*x);
+T := 4;
+f14_periodic := proc(x) f14(x - floor(x/4)*4) end;
+a0 := (2/T) * int(f14, x=0..4);
+a_n := n -> (2/T) * int(f14*cos(2*Pi*n*x/T), x=0..4);
+b_n := n -> (2/T) * int(f14*sin(2*Pi*n*x/T), x=0..4);
+S6 := a0/2 + sum(a_n(n)*cos(2*Pi*n*x/T) + b_n(n)*sin(2*Pi*n*x/T), n=1..6);
+plot([f14_periodic, S6], x=0..8, color=[red, blue], legend=["f(x)", "S6"]);
+```
+
+---
+
+## **Задание 15**
+Найти преобразование Фурье функции \(f(x) = e^{-ax^2}, a > 0\).
+
+### Решение в Maple:
+```maple
+restart;
+with(inttrans):
+f15 := exp(-a*x^2);
+fourier(f15, x, w);
+```
+
+---
+
+## **Задание 16**
+Найти изображения Лапласа и построить графики:
+a) \(\sin t\)  
+b) \(\frac{1 - \cos 2t}{t} e^{-3t}\)
+
+### Решение в Maple:
+```maple
+restart;
+with(inttrans):
+with(plots):
+
+# a)
+f16a := sin(t);
+F16a := laplace(f16a, t, p);
+
+# b)
+f16b := (1 - cos(2*t))/t * exp(-3*t);
+F16b := laplace(f16b, t, p);
+simplify(F16b);
+
+# Графики
+plot1 := plot(f16a, t=0..10, title="sin(t)");
+plot2 := plot(f16b, t=0..10, title="(1-cos(2t))/t * exp(-3t)");
+display(Array([plot1, plot2]));
+```
+
+---
+
+## **Задание 17**
+Найти оригинал Лапласа функции \(F(p) = \frac{1}{(p-1)^2(p^2+1)}\) и построить его график.
+
+### Решение в Maple:
+```maple
+restart;
+with(inttrans):
+F17 := 1/((p-1)^2*(p^2+1));
+f17 := invlaplace(F17, p, t);
+simplify(f17);
+plot(f17, t=0..10);
+```
+
+---
+
+## **Задание 18**
+Дана функция \(f(x) = \int_0^\infty \frac{1 - \cos(xt)}{x^2} dx\), найти её изображение Лапласа.
+
+### Решение в Maple:
+```maple
+restart;
+with(inttrans):
+f18 := int((1 - cos(x*t))/x^2, x=0..infinity);
+F18 := laplace(f18, t, p);
+simplify(F18);
+```
+
+---
+
+Если нужно:
+- объяснить каждый шаг подробнее
+- адаптировать код под конкретную версию Maple
+- подготовить отчёт с графиками и выводами
+
+Просто скажите, что именно вам нужно уточнить или дополнить!
